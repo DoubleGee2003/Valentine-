@@ -1,133 +1,125 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>My Valentine 💘</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-image: url("background.jpg"); /* Hintergrundbild im gleichen Ordner wie index.html */
-      background-size: cover;
-      background-position: center;
-      height: 100vh;
-      margin: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      overflow: hidden;
-    }
+<meta charset="UTF-8">
+<title>My Valentine 💘</title>
 
-    .card {
-      background: rgba(255, 255, 255, 0.9);
-      padding: 40px;
-      border-radius: 25px;
-      text-align: center;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-      max-width: 420px;
-      z-index: 2;
-    }
+<style>
+body {
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: url("background.jpg") center / cover no-repeat;
+  font-family: Arial, sans-serif;
+  overflow: hidden;
+  transition: background 1.5s ease;
+}
 
-    h1 {
-      color: #ff4d6d;
-    }
+.card {
+  background: rgba(255,255,255,0.92);
+  padding: 40px;
+  border-radius: 25px;
+  text-align: center;
+  max-width: 420px;
+  box-shadow: 0 10px 30px rgba(0,0,0,.3);
+  z-index: 2;
+}
 
-    button {
-      padding: 12px 28px;
-      font-size: 16px;
-      border: none;
-      border-radius: 30px;
-      cursor: pointer;
-      margin: 10px;
-      transition: transform 0.2s;
-    }
+h1 { color: #ff4d6d; }
 
-    #yes {
-      background-color: #ff4d6d;
-      color: white;
-    }
+button {
+  padding: 12px 28px;
+  font-size: 16px;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  margin: 10px;
+}
 
-    #no {
-      background-color: #ddd;
-      position: relative;
-    }
+#yes { background: #ff4d6d; color: white; }
+#no  { background: #ddd; position: relative; }
 
-    p {
-      color: #444;
-      line-height: 1.6;
-      margin-top: 20px;
-    }
+.heart {
+  position: fixed;
+  top: -20px;
+  font-size: 24px;
+  animation: fall linear forwards;
+}
 
-    .heart {
-      position: fixed;
-      top: -10px;
-      font-size: 24px;
-      animation: fall linear forwards;
-      z-index: 1;
-    }
+@keyframes fall {
+  to { transform: translateY(110vh); opacity: 0; }
+}
 
-    @keyframes fall {
-      to {
-        transform: translateY(110vh);
-        opacity: 0;
-      }
-    }
-  </style>
+audio {
+  width: 100%;
+  margin-top: 15px;
+}
+</style>
 </head>
+
 <body>
 
-  <!-- Musik -->
-  <audio id="loveSong" src="assets/audio/queen-of-disaster.mp3"></audio>
+<div class="card" id="card">
+  <h1>Will you be my Valentine, Eva? 💘</h1>
 
-  <div class="card">
-    <h1>Willst du meine Valentine sein, Eva? 💘</h1>
-    <button id="yes" onclick="yesClicked()">Yes 💕</button>
-    <button id="no" onmouseover="moveButton()">No 🙈</button>
-  </div>
+  <button id="yes">Yes 💕</button>
+  <button id="no">No 🙈</button>
 
-  <script>
-    function yesClicked() {
-      document.querySelector('.card').innerHTML = `
-        <h1>💖 Eva 💖</h1>
-        <p>
-          Es war das Einfachste der Welt, mich in dich zu verlieben.<br><br>
-          Nichts zählt für mich außer dir. Jeden Tag bin ich mir dessen bewusst.<br><br>
-          Ich habe dich geliebt, als ich dich das erste Mal traf. Ich liebe dich heute und ich werde dich für den Rest meines Lebens lieben.
-        </p>
-      `;
-      startHearts();
-      playMusic();
-    }
+  <!-- Safari & GitHub kompatibles Audio -->
+  <audio id="music" controls preload="none">
+    <source src="cola.mp3" type="audio/mpeg">
+    <source src="cola.wav" type="audio/wav">
+    Dein Browser unterstützt Audio nicht.
+  </audio>
+</div>
 
-    function moveButton() {
-      const noBtn = document.getElementById("no");
-      const btnRect = noBtn.getBoundingClientRect();
-      const maxX = window.innerWidth - btnRect.width;
-      const maxY = window.innerHeight - btnRect.height;
-      const x = Math.random() * maxX;
-      const y = Math.random() * maxY;
-      noBtn.style.transform = `translate(${x}px, ${y}px)`;
-    }
+<script>
+const yesBtn = document.getElementById("yes");
+const noBtn  = document.getElementById("no");
+const music  = document.getElementById("music");
+const card   = document.getElementById("card");
 
-    function startHearts() {
-      const hearts = [];
-      setInterval(() => {
-        const heart = document.createElement("div");
-        heart.classList.add("heart");
-        heart.innerText = "💖";
-        heart.style.left = Math.random() * 100 + "vw";
-        heart.style.animationDuration = Math.random() * 2 + 3 + "s";
-        document.body.appendChild(heart);
-        hearts.push(heart);
-        if (hearts.length > 50) hearts.shift().remove();
-        setTimeout(() => heart.remove(), 5000);
-      }, 300);
-    }
+yesBtn.addEventListener("click", () => {
 
-    function playMusic() {
-      const song = document.getElementById("loveSong");
-      song.volume = 0.6;
-      song.play().catch(err => console.error("Fehler beim Abspielen der Musik:", err));
-    }
-  </script>
+  // Hintergrund wechseln
+  document.body.style.background =
+    "linear-gradient(rgba(255,182,193,.4), rgba(255,105,180,.4)), url('background2.jpg') center / cover no-repeat";
+
+  // Text ändern (ohne Audio zu zerstören!)
+  card.querySelector("h1").innerText = "💖 Eva 💖";
+  card.querySelector("p")?.remove();
+
+  const msg = document.createElement("p");
+  msg.innerHTML = `
+    Falling in love with you was the easiest thing I've ever done.<br><br>
+    I loved you the day I met you.<br>
+    I love you today.<br>
+    I will love you for the rest of my life.
+  `;
+  card.insertBefore(msg, music);
+
+  startHearts();
+});
+
+noBtn.addEventListener("mouseover", () => {
+  noBtn.style.transform =
+    `translate(${Math.random()*200-100}px, ${Math.random()*200-100}px)`;
+});
+
+function startHearts() {
+  setInterval(() => {
+    const h = document.createElement("div");
+    h.className = "heart";
+    h.textContent = "💖";
+    h.style.left = Math.random()*100 + "vw";
+    h.style.animationDuration = Math.random()*2 + 3 + "s";
+    document.body.appendChild(h);
+    setTimeout(() => h.remove(), 5000);
+  }, 300);
+}
+</script>
+
 </body>
 </html>
