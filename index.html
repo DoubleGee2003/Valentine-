@@ -5,56 +5,74 @@
 <title>My Valentine 💘</title>
 
 <style>
+/* ===== GRUNDLAYOUT ===== */
 body {
   margin: 0;
   height: 100vh;
+  font-family: Arial, sans-serif;
+  background: url("./background.jpg") center / cover no-repeat;
   display: flex;
   justify-content: center;
   align-items: center;
-  background: url("background.jpg") center / cover no-repeat;
-  font-family: Arial, sans-serif;
   overflow: hidden;
   transition: background 1.5s ease;
 }
 
+/* ===== KARTE ===== */
 .card {
-  background: rgba(255,255,255,0.92);
+  background: rgba(255,255,255,0.93);
   padding: 40px;
   border-radius: 25px;
-  text-align: center;
   max-width: 420px;
+  text-align: center;
   box-shadow: 0 10px 30px rgba(0,0,0,.3);
   z-index: 2;
 }
 
-h1 { color: #ff4d6d; }
+h1 {
+  color: #ff4d6d;
+}
 
+/* ===== BUTTONS ===== */
 button {
   padding: 12px 28px;
   font-size: 16px;
-  border: none;
   border-radius: 30px;
+  border: none;
   cursor: pointer;
   margin: 10px;
 }
 
-#yes { background: #ff4d6d; color: white; }
-#no  { background: #ddd; position: relative; }
+#yes {
+  background: #ff4d6d;
+  color: white;
+}
 
+#no {
+  background: #ddd;
+  position: relative;
+}
+
+/* ===== AUDIO ===== */
+audio {
+  width: 100%;
+  margin-top: 20px;
+}
+
+/* ===== HERZEN ===== */
 .heart {
   position: fixed;
   top: -20px;
   font-size: 24px;
   animation: fall linear forwards;
+  z-index: 1;
 }
 
 @keyframes fall {
-  to { transform: translateY(110vh); opacity: 0; }
-}
-
-audio {
-  width: 100%;
-  margin-top: 15px;
+  to {
+    transform: translateY(110vh);
+    opacity: 0;
+  }
 }
 </style>
 </head>
@@ -62,61 +80,68 @@ audio {
 <body>
 
 <div class="card" id="card">
-  <h1>Will you be my Valentine, Eva? 💘</h1>
 
-  <button id="yes">Yes 💕</button>
-  <button id="no">No 🙈</button>
+  <h1 id="title">Will you be my Valentine, Eva? 💘</h1>
 
-  <!-- Safari & GitHub kompatibles Audio -->
-  <audio id="music" controls preload="none">
-    <source src="cola.mp3" type="audio/mpeg">
-    <source src="cola.wav" type="audio/wav">
-    Dein Browser unterstützt Audio nicht.
+  <div id="buttons">
+    <button id="yes">Yes 💕</button>
+    <button id="no">No 🙈</button>
+  </div>
+
+  <!-- Safari-sicheres Audio -->
+  <audio id="music" controls preload="metadata">
+    <source src="./cola.mp3" type="audio/mpeg">
+    Your browser does not support audio.
   </audio>
+
 </div>
 
 <script>
+/* ===== ELEMENTE ===== */
 const yesBtn = document.getElementById("yes");
 const noBtn  = document.getElementById("no");
 const music  = document.getElementById("music");
-const card   = document.getElementById("card");
+const title  = document.getElementById("title");
 
+/* ===== YES-KLICK ===== */
 yesBtn.addEventListener("click", () => {
 
-  // Hintergrund wechseln
+  /* Hintergrund wechseln */
   document.body.style.background =
-    "linear-gradient(rgba(255,182,193,.4), rgba(255,105,180,.4)), url('background2.jpg') center / cover no-repeat";
+    "linear-gradient(rgba(255,182,193,.35), rgba(255,105,180,.35)), url('./background2.jpg') center / cover no-repeat";
 
-  // Text ändern (ohne Audio zu zerstören!)
-  card.querySelector("h1").innerText = "💖 Eva 💖";
-  card.querySelector("p")?.remove();
+  /* Text ändern */
+  title.innerHTML = "💖 Eva 💖<br><br>Falling in love with you was the easiest thing I've ever done.<br><br>I loved you the day I met you. I love you today. I will love you for the rest of my life.";
 
-  const msg = document.createElement("p");
-  msg.innerHTML = `
-    Falling in love with you was the easiest thing I've ever done.<br><br>
-    I loved you the day I met you.<br>
-    I love you today.<br>
-    I will love you for the rest of my life.
-  `;
-  card.insertBefore(msg, music);
+  /* Buttons ausblenden */
+  document.getElementById("buttons").style.display = "none";
+
+  /* Musik starten (Safari-User-Interaction erlaubt) */
+  music.currentTime = 0;
+  music.play().catch(() => {
+    alert("Tap play ▶️ to start the music (Safari rule)");
+  });
 
   startHearts();
 });
 
+/* ===== NO-BUTTON FLIEHT ===== */
 noBtn.addEventListener("mouseover", () => {
   noBtn.style.transform =
     `translate(${Math.random()*200-100}px, ${Math.random()*200-100}px)`;
 });
 
+/* ===== HERZEN ===== */
 function startHearts() {
   setInterval(() => {
-    const h = document.createElement("div");
-    h.className = "heart";
-    h.textContent = "💖";
-    h.style.left = Math.random()*100 + "vw";
-    h.style.animationDuration = Math.random()*2 + 3 + "s";
-    document.body.appendChild(h);
-    setTimeout(() => h.remove(), 5000);
+    const heart = document.createElement("div");
+    heart.className = "heart";
+    heart.textContent = "💖";
+    heart.style.left = Math.random()*100 + "vw";
+    heart.style.animationDuration = Math.random()*2 + 3 + "s";
+    document.body.appendChild(heart);
+
+    setTimeout(() => heart.remove(), 5000);
   }, 300);
 }
 </script>
